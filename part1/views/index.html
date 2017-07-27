@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<link rel="stylesheet" href="../plugin/bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="../plugin/jquery.min.js"></script>
+<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../plugin/angular.min.js"></script>
+<script>
+angular.module("myApp",[]).controller("myC",['$scope','$http',function($scope,$http){
+
+$scope.loadData=function(){
+	$http.get('/list')
+	.success(function(data) { 
+		$scope.data=data;
+	});
+};
+$scope.loadData();
+$scope.delData=function(id){
+	$http.get('/del/'+id)
+	.success(function() { 
+		$scope.loadData()
+		console.log(123123);
+	});
+};
+
+	
+}])
+</script>
+</head>
+<body ng-app="myApp" ng-controller="myC">
+<div class="col">
+	<div class="col-md-4 col-md-offset-4">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title">用户列表<a class="pull-right" href="loginOut">注销</a></div>
+			</div>
+			<div class="panel-body">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>用户名</th>
+							<th>邮箱</th>
+							<th width="80">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="x in data">
+							<td ng-bind="x.username"></td>
+							<td ng-bind="x.email"></td>
+							<td><a class="btn btn-default" ng-click="delData(x._id)" href="#">删除</a></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

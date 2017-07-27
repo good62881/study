@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+
+.index .el-form-item__content{ height:36px;}
+.login,.reg{width:350px; padding:30px 20px; background:#fff; border:1px solid #EFF2F7; border-radius:5px; box-shadow:0 0 3px 4px #eee; position:fixed; top:100px; left:0; right:0; margin:auto;}
+
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
