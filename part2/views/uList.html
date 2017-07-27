@@ -60,11 +60,11 @@
 	<el-col :span="20" class="main uList">
 		<h2>用户管理</h2>
 		<div class="search fix">
-			<el-dropdown trigger="click">
+			<el-dropdown trigger="click" @command="dropdown">
 				<el-button type="primary">批量操作<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
 				<el-dropdown-menu slot="dropdown">
-					<el-dropdown-item>激活</el-dropdown-item>
-					<el-dropdown-item>删除</el-dropdown-item>
+					<el-dropdown-item  :command="1">激活</el-dropdown-item>
+					<el-dropdown-item  :command="0">删除</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 			<el-form inline :model="searchForm" class="fr">
@@ -100,12 +100,12 @@
 			<el-table-column prop="_auT" label="用户状态"></el-table-column>
 			<el-table-column label="操作">
 				<template scope="scope">
-					<el-button size="small" @click="activate([scope.row])">激活</el-button>
+					<el-button size="small" @click="actUser([scope.row])">激活</el-button>
 					<el-popover width="160">
 						<p>确定删除该账号吗？</p>
 						<div class="tr">
 							<el-button size="mini" type="text"  @click="document.body.click()">取消</el-button>
-							<el-button size="mini" type="primary" @click="del([scope.row])">确定</el-button>
+							<el-button size="mini" type="primary" @click="delUser([scope.row])">确定</el-button>
 						</div>
 						<el-button size="small" type="danger" slot="reference">删除</el-button>
 					</el-popover>

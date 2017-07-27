@@ -15,12 +15,17 @@ exports.login=function(req,res){
 	.exec(function(err,user){
 		var cb={code:0,msg:""};
 		if (user && user.pass===hashPW(req.body.pass)) {
-			req.session.regenerate(function(){
-				req.session.user=user.id;
-				req.session.auT=user.auT;
-				cb.code=1;
+			if (user.auT) {
+				req.session.regenerate(function(){
+					req.session.user=user.id;
+					req.session.auT=user.auT;
+					cb.code=1;
+					res.send(cb);
+				})
+			}else{
+				cb.msg='账号未激活！'
 				res.send(cb);
-			})
+			}
 		}else{
 			cb.msg='账号或密码错误！'
 			res.send(cb);

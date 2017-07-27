@@ -58,8 +58,10 @@ app.route('/uList')
 	.post(uList.uList);
 
 //激活用户
-app.get('/uList/actUser',uList.actUser);
+app.post('/uList/actUser',uList.actUser);
 
+//删除用户
+app.post('/uList/delUser',uList.delUser);
 
 
 
