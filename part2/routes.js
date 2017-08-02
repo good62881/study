@@ -9,7 +9,16 @@ var users=require('./controllers/users');
 //用户管理页控制文件
 var uList=require('./controllers/uList');
 
+//用户信息编辑
+var edit=require('./controllers/edit');
 
+
+
+//刷新session
+app.use(function(req, res, next){
+    req.session.touch();
+    next();
+});
 
 
 
@@ -62,6 +71,20 @@ app.post('/uList/actUser',uList.actUser);
 
 //删除用户
 app.post('/uList/delUser',uList.delUser);
+
+
+//信息编辑
+app.get('/edit',function(req, res){
+	if(req.session.user){
+		res.render('edit');
+	}else{
+		res.redirect('/login')
+	}
+});
+//更新基本信息
+app.post('/edit/editInfo',edit.editInfo);
+//更新密码
+//app.post('/edit/editPass',uList.editPass);
 
 
 

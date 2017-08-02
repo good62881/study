@@ -37,10 +37,7 @@ var app=new Vue({
 			this._searchForm=JSON.parse(JSON.stringify(this.searchForm));
 			this.$http.post('/uList',this._searchForm).then(function(res){
 				if (!res.body.code) {
-					this.$message({
-						message: res.body.msg,
-						type: 'error'
-					});
+					this.$message.error(res.body.msg);
 				}else{
 					this.tableData=res.body.data;
 					this.tableData.data.forEach(function(v,i,a){  //el-table没有数据过滤和筛选，需预先处理
@@ -62,10 +59,7 @@ var app=new Vue({
 			var _actUser=id?id.map(function(x){return x.account}):[];
 			this.$http.post('/uList/actUser',_actUser).then(function(res){
 				if (!res.body.code) {
-					this.$message({
-						message: res.body.msg,
-						type: 'error'
-					});
+					this.$message.error(res.body.msg);
 				}else{
 					this.$message({
 						message: res.body.msg,
@@ -84,10 +78,7 @@ var app=new Vue({
 			var _delUser=id?id.map(function(x){return x.account}):[];
 			this.$http.post('/uList/delUser',_delUser).then(function(res){
 				if (!res.body.code) {
-					this.$message({
-						message: res.body.msg,
-						type: 'error'
-					});
+					this.$message.error(res.body.msg);
 				}else{
 					this.$message({
 						message: res.body.msg,

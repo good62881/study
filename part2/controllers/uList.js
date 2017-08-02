@@ -7,7 +7,6 @@ var Users=mongoose.model('users');
 exports.uList=function(req,res){
 	var cb={code:0,data:{data:"",count:""},msg:""};
 	if(req.session.user && req.session.auT==100){
-		req.session.touch();
 		var match= {};
 		if (req.body.date){match.$and=[{date:{$gte:new Date(req.body.date[0])}},{date:{$lte:new Date(req.body.date[1])}}]}; //注意将字符串转为Date对象，在进行查询
 		if (req.body.status!==''){match.auT=req.body.status};
@@ -39,7 +38,6 @@ exports.uList=function(req,res){
 exports.actUser=function(req,res){
 	var cb={code:0,msg:""};
 	if(req.session.user && req.session.auT==100){
-		req.session.touch();
 		Users.update({account:{$in:req.body}},{$set:{auT:1}},{multi:true},function(err,data) {
 			if (err) {
 				cb.msg="操作失败！";
@@ -61,7 +59,6 @@ exports.actUser=function(req,res){
 exports.delUser=function(req,res){
 	var cb={code:0,msg:""};
 	if(req.session.user && req.session.auT==100){
-		req.session.touch();
 		Users.remove({account:{$in:req.body}},function(err,data) {
 			if (err) {
 				cb.msg="操作失败！";
