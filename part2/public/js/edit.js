@@ -47,7 +47,7 @@ var editInfo = Vue.extend({
             if (!res.body.code) {
               that.$message.error(res.body.msg);
             }else{
-              this.$message({
+              that.$message({
                 message: res.body.msg,
                 type: 'success',
                 duration:1000,
@@ -65,13 +65,100 @@ var editInfo = Vue.extend({
 
 
 
+//修改密码
+var editPass = Vue.extend({
+  template: '#editPass',
+  data: function() {
+    var that=this;
+    return {
+      editPass:{
+        pass: "",
+        newPass: "",
+        checkPass: ""
+      },
+      rules: {
+        pass: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }, {
+          max: 20,
+          message: '密码不超过 20 个字符',
+          trigger: 'blur'
+        }],
+        newPass: [{
+          validator: function(rule, value, callback) {
+            if (value === '') {
+              callback(new Error('请输入密码'));
+            } else if (value.length > 20) {
+              callback(new Error('密码不能超过20位字符'));
+            } else if (value == that.editPass.pass) {
+              callback(new Error('不能与原密码一样'));
+            } else {
+              if (that.editPass.checkPass !== '') {
+                that.$refs.editPass.validateField('checkPass');
+              }
+              callback();
+            }
+          },
+          trigger: 'blur',
+          required: true
+        }],
+        checkPass: [{
+          validator: function(rule, value, callback) {
+            if (value === '') {
+              callback(new Error('请再次输入密码'));
+            } else if (value !== that.editPass.newPass) {
+              callback(new Error('两次输入密码不一致!'));
+            } else {
+              callback();
+            }
+          },
+          trigger: 'blur',
+          required: true
+        }]
+      }
+    };
+  },
+  methods: {
+    submitForm: function(formName) {
+      var that=this;
+      that.$refs[formName].validate(function(valid){
+        if (valid) {
+          that.$http.post('/edit/editPass', that.editPass).then(function(res){
+            if (!res.body.code) {
+              that.$message.error(res.body.msg);
+            }else{
+              that.$message({
+                message: res.body.msg,
+                type: 'success',
+                duration:2000,
+                onClose:function(){
+                  window.location='/out'
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  }
+});
+
+
+
+
 //主体
 var app=new Vue({
   el: "#box",
   data:{
-    tab:'',
     tit:'基本资料',
     info:{}
+  },
+  computed: {
+    tab: function () {
+      return this.$route.name
+    }
   },
   created:function(){
     //获取用户信息
@@ -92,18 +179,29 @@ var app=new Vue({
   methods: {
     tabTit:function(tab) {
       this.tit=tab._props.label;
-      window.location='/edit#'+tab._props.name;
+      window.location='/edit#/'+tab._props.name;
     }
   },
   router: new VueRouter({
     routes: [{
       path: '/',
+      name:'editInfo',
       component:editInfo,
       beforeEnter: function(to, from, next) {
         document.title = '基本资料';
         next();
       }
-    }]
+    },{
+      path: '/editPass',
+      name:'editPass',
+      component: editPass,
+      beforeEnter: function(to, from, next) {
+        document.title = '修改密码';
+        next();
+      }
+    },
+    { path: '*', redirect: '/'}
+    ]
   })
 });
 

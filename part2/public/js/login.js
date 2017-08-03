@@ -49,7 +49,7 @@ var login = Vue.extend({
 var reg = Vue.extend({
   template: '#reg',
   data: function() {
-    var self = this;
+    var that = this;
     return {
       reg: {
         account: "",
@@ -95,8 +95,8 @@ var reg = Vue.extend({
             } else if (value.length > 20) {
               callback(new Error('密码不能超过20位字符'));
             } else {
-              if (self.reg.checkPass !== '') {
-                self.$refs.reg.validateField('checkPass');
+              if (that.reg.checkPass !== '') {
+                that.$refs.reg.validateField('checkPass');
               }
               callback();
             }
@@ -108,7 +108,7 @@ var reg = Vue.extend({
           validator: function(rule, value, callback) {
             if (value === '') {
               callback(new Error('请再次输入密码'));
-            } else if (value !== self.reg.pass) {
+            } else if (value !== that.reg.pass) {
               callback(new Error('两次输入密码不一致!'));
             } else {
               callback();
@@ -151,8 +151,10 @@ var reg = Vue.extend({
 new Vue({
   el: "#index",
   router: new VueRouter({
-    routes: [{
+    routes: [
+    {
       path: '/',
+      //alias: '/*',
       component: login,
       beforeEnter: function(to, from, next) {
         document.title = '登录';
@@ -165,6 +167,8 @@ new Vue({
         document.title = '注册';
         next();
       }
-    }]
+    },
+    { path: '*', redirect: '/'}   //关于所有错误地址的重定向，一定要写在最后面
+    ]
   })
 });

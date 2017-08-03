@@ -84,7 +84,7 @@ app.get('/edit',function(req, res){
 //更新基本信息
 app.post('/edit/editInfo',edit.editInfo);
 //更新密码
-//app.post('/edit/editPass',uList.editPass);
+app.post('/edit/editPass',edit.editPass);
 
 
 
