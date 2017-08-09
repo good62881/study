@@ -45,7 +45,7 @@ var editInfo = Vue.extend({
         if (valid) {
           that.$http.post('/edit/editInfo', that.editInfo).then(function(res){
             if (!res.body.code) {
-              that.$message.error(res.body.msg);
+              that.$message.error(res.body.msg)
             }else{
               that.$message({
                 message: res.body.msg,
@@ -127,7 +127,7 @@ var editPass = Vue.extend({
         if (valid) {
           that.$http.post('/edit/editPass', that.editPass).then(function(res){
             if (!res.body.code) {
-              that.$message.error(res.body.msg);
+              that.$message.error(res.body.msg)
             }else{
               that.$message({
                 message: res.body.msg,
@@ -153,6 +153,7 @@ var app=new Vue({
   el: "#box",
   data:{
     tit:'基本资料',
+    imgDialog:false,
     info:{}
   },
   computed: {
@@ -180,6 +181,33 @@ var app=new Vue({
     tabTit:function(tab) {
       this.tit=tab._props.label;
       window.location='/edit#/'+tab._props.name;
+    },
+    beforeAvatarUpload:function(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 < 100;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 100K!');
+      }
+      return isJPG && isLt2M;
+    },
+    handleAvatarSuccess:function(res) {
+      if (!res.code) {
+        this.$message.error(res.msg)
+      }else{
+        this.imgDialog=false;
+        this.$message({
+          message: '上传成功！',
+          type: 'success',
+          duration:1000,
+          onClose:function(){
+            window.location.reload()
+          }
+        });
+      }
     }
   },
   router: new VueRouter({

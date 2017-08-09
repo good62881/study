@@ -1,4 +1,3 @@
-var express=require('express');
 
 
 module.exports=function(app){
@@ -11,14 +10,6 @@ var uList=require('./controllers/uList');
 
 //用户信息编辑
 var edit=require('./controllers/edit');
-
-
-
-//刷新session
-app.use(function(req, res, next){
-    req.session.touch();
-    next();
-});
 
 
 
@@ -85,6 +76,8 @@ app.get('/edit',function(req, res){
 app.post('/edit/editInfo',edit.editInfo);
 //更新密码
 app.post('/edit/editPass',edit.editPass);
+//上传头像
+app.post('/edit/imgUpload',edit.imgUpload);
 
 
 

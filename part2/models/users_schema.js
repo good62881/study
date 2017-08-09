@@ -8,6 +8,7 @@ var usersSchema = new Schema({
 	name:String,
 	email:{type:String,required:true},
 	phone:Number,
+	avatar:String,
 	auT:{type:Number,required:true},
 },{collection:'users'});
 

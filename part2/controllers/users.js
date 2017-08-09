@@ -66,7 +66,7 @@ exports.reg=function(req,res){
 exports.getInfo=function(req,res){
 	var cb={code:0,data:"",msg:""};
 	if(req.session.user){
-		Users.aggregate([{$match:{_id:new mongoose.Types.ObjectId(req.session.user)}},{$project:{_id:0,account:1,name:1,email:1,phone:1,auT:1}}],function(err,data){  //_id自动生成是是ObjectId对象，查询时也需要把字段转换成ObjectId对象
+		Users.aggregate([{$match:{_id:new mongoose.Types.ObjectId(req.session.user)}},{$project:{_id:0,account:1,name:1,email:1,phone:1,avatar:1,auT:1}}],function(err,data){  //_id自动生成是是ObjectId对象，查询时也需要把字段转换成ObjectId对象
 			if (err) {
 				cb.msg="获取用户信息出错！";
 				res.send(cb);

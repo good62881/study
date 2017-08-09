@@ -22,9 +22,9 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 app.use(session({
     secret: 'loginIn',
-    resave: false,  
-    saveUninitialized: true,  
-    cookie: {maxAge:30*60*1000},
+    resave: true,    //必填，为true时强制更新过期时间。为false，除非session修改，否则不更新。（前提是没有调用或自己实现touch()事件）
+    saveUninitialized: false,   //必填，为true时，新生成的session直接写入Mongo中。为false时，新生成但是没有任何修改的session不会写入Mongo。（例如登录，登录后会立马添加session.user，然后被写入。）
+    cookie: { maxAge: 30*60*1000  },
     store: new MongoStore({
     	mongooseConnection: mongoose.connection
     })
@@ -32,4 +32,6 @@ app.use(session({
 
 //引入路由配置文件
 require('./routes')(app);
-app.listen(8081);
+app.listen(8081,function() {
+	console.log('服务器正常启动于8081端口！')
+});

@@ -19,12 +19,12 @@ exports.uList=function(req,res){
 				if (err) {
 					cb.msg="获取用户列表出错！";
 					res.send(cb);
-				}else{
-					cb.data.count=results.length    //统计总数
-					cb.data.data=results.splice(req.body.pageSize*(req.body.page-1),req.body.pageSize);  //分页
-					cb.code=1;
-					res.send(cb);
+					return 
 				}
+				cb.data.count=results.length    //统计总数
+				cb.data.data=results.splice(req.body.pageSize*(req.body.page-1),req.body.pageSize);  //分页
+				cb.code=1;
+				res.send(cb);
 		});
 		
 	}else{
@@ -42,11 +42,11 @@ exports.actUser=function(req,res){
 			if (err) {
 				cb.msg="操作失败！";
 				res.send(cb);
-			}else{
-				cb.msg="操作成功！";
-				cb.code=1;
-				res.send(cb);
+				return
 			}
+			cb.msg="操作成功！";
+			cb.code=1;
+			res.send(cb);
 		});
 	}else{
 		cb.msg="登录超时或没有权限！";
@@ -63,11 +63,11 @@ exports.delUser=function(req,res){
 			if (err) {
 				cb.msg="操作失败！";
 				res.send(cb);
-			}else{
-				cb.msg="操作成功！";
-				cb.code=1;
-				res.send(cb);
+				return
 			}
+			cb.msg="操作成功！";
+			cb.code=1;
+			res.send(cb);
 		});
 	}else{
 		cb.msg="登录超时或没有权限！";
