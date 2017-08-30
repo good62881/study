@@ -171,7 +171,7 @@ exports.delMsg=function(req,res){
 	var cb={code:0,data:"",msg:""};
 	if(req.session.user){
 		Msgs.update(
-			{group:[req.session.user,req.query.id].sort().toString()},
+			{$and:[{group:[req.session.user,req.query.id].sort().toString()},{del:{$nin:[req.session.user]}}]},
 			{$push:{del:req.session.user}},
 			{multi:true},
 			function(err,data) {
