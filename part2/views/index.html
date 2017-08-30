@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>首页</title>
+<!-- vue -->
+<!--<script type="text/javascript" src="plugin/vue.min.js"></script>-->
+<script type="text/javascript" src="plugin/vue.min.js"></script>
+<script type="text/javascript" src="plugin/vue-resource.min.js"></script>
+<!-- element-ui -->
+<link rel="stylesheet" href="plugin/element-ui/theme-default/index.css">
+<script src="plugin/element-ui/index.js"></script>
+<!-- element-add-icon -->
+<link rel="stylesheet" href="http://at.alicdn.com/t/font_vrlq4h8oaghf47vi.css">
+<!-- socket.io实时应用 -->
+<script src="socket.io/socket.io.js"></script>
+
+<link rel="stylesheet" href="css/com.css">
+<link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+
+<div id="box" v-cloak>
+
+<el-row class="top fix">
+	<el-col :span="4" class="tc"><h1>后台管理</h1></el-col>
+	<el-col :span="20">
+		<dl>
+			<dt>
+				<img :src="userInfo.avatar" alt="">
+				<p class="txthide">{{userInfo.name?userInfo.name:'无名小虾'}}</p>
+				<p class="txthide"><small v-if="userInfo.auT==100">管理员</small><small v-else>普通用户</small></p>
+			</dt>
+			<dd><a class="el-icon-tuichu iconadd" href="/out"></a></dd>
+			<dd><a class="el-icon-setting" href="/edit#"></a></dd>
+			<dd>
+				<el-badge :value="unReadMsg">
+					<a class="el-icon-message" href="/msg"></a>
+				</el-badge>
+			</dd>
+		</dl>
+	</el-col>
+</el-row>
+
+
+
+<el-row class="oh">
+	<el-col :span="4" class="nav">
+		<el-menu default-active="1">
+			<el-menu-item index="1"><a href="/"><i class="el-icon-shouye iconadd"></i>首页</a></el-menu-item>
+			<el-menu-item index="2"><a href="/msg"><i class="el-icon-message"></i>私信</a></el-menu-item>
+			<el-submenu index="3">
+				<template slot="title"><i class="el-icon-setting"></i>账号设置</template>
+				<el-menu-item index="3-1"><a href="/edit#">基本资料</a></el-menu-item>
+				<el-menu-item index="3-2"><a href="/edit#/editPass">修改密码</a></el-menu-item>
+			</el-submenu>
+			<el-menu-item index="4" v-if="userInfo.auT==100"><a href="/uList"><i class="el-icon-users iconadd"></i>用户管理</a></el-menu-item>
+		</el-menu>
+	</el-col>
+	<el-col :span="20" class="main index">
+		<div class="info">
+			<img :src="userInfo.avatar" alt="">
+			<h1>{{userInfo.name?userInfo.name:'无名小虾'}}<small>Uid:{{userInfo.account}} {{userInfo.auT==100?'管理员':'普通用户'}}</small></h1>
+			<p>共有0条[<a href="">私信</a>]</p>
+		</div>
+	</el-col>
+</el-row>
+	
+
+</div>
+
+
+
+
+<script src="js/index.js"></script>
+
+
+</body>
+</html>

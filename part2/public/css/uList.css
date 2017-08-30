@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+.uList h2{ font-size:38px; color:#6dc3ea; font-weight:normal; margin-bottom:40px;}
+.uList .search{ margin-bottom:30px;}
+.uList .search .el-form-item{ margin-bottom:0;}
+.uList .search .el-form-item__content{ height:36px;}
+.uList .search .el-select{ width:130px;}
+.uList .search .el-date-editor{ width:250px;}
+.uList .pagination{ text-align:center; padding:20px 0;}

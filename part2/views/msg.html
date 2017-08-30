@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>私信</title>
+<!-- vue -->
+<!--<script type="text/javascript" src="plugin/vue.min.js"></script>-->
+<script type="text/javascript" src="plugin/vue.min.js"></script>
+<script type="text/javascript" src="plugin/vue-resource.min.js"></script>
+<script type="text/javascript" src="plugin/vue-router.min.js"></script>
+<!-- element-ui -->
+<link rel="stylesheet" href="plugin/element-ui/theme-default/index.css">
+<script src="plugin/element-ui/index.js"></script>
+<!-- element-add-icon -->
+<link rel="stylesheet" href="http://at.alicdn.com/t/font_vrlq4h8oaghf47vi.css">
+<!-- socket.io实时应用 -->
+<script src="socket.io/socket.io.js"></script>
+
+<link rel="stylesheet" href="css/com.css">
+<link rel="stylesheet" href="css/msg.css">
+
+</head>
+<body>
+
+<div id="box" v-cloak>
+
+<el-row class="top fix">
+	<el-col :span="4" class="tc"><h1>后台管理</h1></el-col>
+	<el-col :span="20">
+		<dl>
+			<dt>
+				<img :src="userInfo.avatar" alt="">
+				<p class="txthide">{{userInfo.name?userInfo.name:'无名小虾'}}</p>
+				<p class="txthide"><small v-if="userInfo.auT==100">管理员</small><small v-else>普通用户</small></p>
+			</dt>
+			<dd><a class="el-icon-tuichu iconadd" href="/out"></a></dd>
+			<dd><a class="el-icon-setting" href="/edit#"></a></dd>
+			<dd>
+				<el-badge :value="unReadMsg">
+					<a class="el-icon-message" href="/msg"></a>
+				</el-badge>
+			</dd>
+		</dl>
+	</el-col>
+</el-row>
+
+
+
+<el-row class="oh">
+	<el-col :span="4" class="nav">
+		<el-menu default-active="2">
+			<el-menu-item index="1"><a href="/"><i class="el-icon-shouye iconadd"></i>首页</a></el-menu-item>
+			<el-menu-item index="2"><a href="/msg"><i class="el-icon-message"></i>私信</a></el-menu-item>
+			<el-submenu index="3">
+				<template slot="title"><i class="el-icon-setting"></i>账号设置</template>
+				<el-menu-item index="3-1"><a href="/edit#">基本资料</a></el-menu-item>
+				<el-menu-item index="3-2"><a href="/edit#/editPass">修改密码</a></el-menu-item>
+			</el-submenu>
+			<el-menu-item index="4" v-if="userInfo.auT==100"><a href="/uList"><i class="el-icon-users iconadd"></i>用户管理</a></el-menu-item>
+		</el-menu>
+	</el-col>
+	<el-col :span="20" class="main msg">
+		<h2>私信</h2>
+		<el-tabs @tab-click="tabTit" v-model="tab">
+			<el-tab-pane label="私信" name="msg"></el-tab-pane>
+			<el-tab-pane label="发送私信" name="sendMsg"></el-tab-pane>
+		</el-tabs>
+		<router-view v-loading="sending" element-loading-text="正在努力" ref="router"></router-view>
+	</el-col>
+</el-row>
+	
+
+</div>
+
+<template id="msg">
+	<el-row :gutter="20">
+		<div class="tc" v-if="!msgList.data[0]">暂无私信</div>
+		<transition name="fade">
+			<el-col :span="18" v-if="msg[0]">
+				<div class="msg_con">
+					<ul id="msg_con">
+						<li v-for="item in msg">
+							<img :src="item.from.avatar" alt="">
+							<div class="msg_txt_box">
+								<div class="msg_txt">
+									<div class="fix"><span>6月15日(星期四) 19时38分</span><b>{{item.from.name?item.from.name:'无名小虾'}}</b><small>(Uid:{{item.from.account}})</small></div>
+									<p>{{item.txt}}</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<el-form :model="send" ref="send">
+						<el-form-item prop="txt" :rules="[{ required:true, message:'内容不能为空'},{max:200, message:'长度在200个字符以内'}]">
+							<el-input type="textarea" resize="none" :rows="2" placeholder="请输入内容" v-model="send.txt"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="submitForm('send')">发送</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+			</el-col>
+		</transition>
+		
+		<el-col :span="6" v-if="msgList.data[0]">
+			<ul class="msg_list">
+				<li v-for="(item,index) in msgList.data">
+					<el-badge :value="item.unRead" class="msg_list_img">
+						<img :src="item.userInfo.avatar" alt="" @click="getMsg(item.userInfo._id,item.userInfo.account)">
+					</el-badge>
+					<div class="msg_list_info"><span>{{item.date | date}}</span><b @click="getMsg(item.userInfo._id,item.userInfo.account)">{{item.userInfo.name?item.userInfo.name:'无名小虾'}}</b><small>(Uid:{{item.userInfo.account}})</small></div>
+					<div class="msg_list_info">
+						<el-popover width="160">
+							<p>删除与该用户的所有私信？</p>
+							<div class="tr">
+								<el-button size="mini" type="text" @click="document.body.click()">取消</el-button>
+								<el-button size="mini" type="primary" @click="delMsg(item.userInfo._id)">确定</el-button>
+							</div>
+							<a slot="reference" href="javascript:;">删除</a>
+						</el-popover>
+						<p>{{item.txt}}</p>
+					</div>
+				</li>
+			</ul>
+			<div class="pagination">
+				<el-pagination layout="prev,pager,next" :page-size="pageSize" :total="msgList.count" @current-change="pageChange"></el-pagination>
+			</div>
+		</el-col>
+	</el-row>
+</template>
+
+<template id="sendMsg">
+	<div class="send">
+		<el-form label-width="80px" :model="send" ref="send"  :rules="rules">
+			<el-form-item label="账号" prop="account">
+				<el-popover trigger="focus" placement="right">
+					<div>注意<br/>请输入账号，不是姓名！</div>
+					<el-input slot="reference" type="text" v-model="send.account" placeholder="请输入对方账号"></el-input>
+				</el-popover>
+			</el-form-item>
+			<el-form-item label="内容" prop="txt">
+				<el-input type="textarea" resize="none" :rows="2" placeholder="请输入内容" v-model="send.txt"></el-input>
+			</el-form-item>
+			<el-form-item>
+				<el-button type="primary" @click="submitForm('send')">发送</el-button>
+			</el-form-item>
+		</el-form>
+	</div>
+</template>
+
+<script src="js/msg.js"></script>
+
+
+</body>
+</html>
