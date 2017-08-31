@@ -83,7 +83,7 @@
 							<img :src="item.from.avatar" alt="">
 							<div class="msg_txt_box">
 								<div class="msg_txt">
-									<div class="fix"><span>6月15日(星期四) 19时38分</span><b>{{item.from.name?item.from.name:'无名小虾'}}</b><small>(Uid:{{item.from.account}})</small></div>
+									<div class="fix"><span>{{item.date | time}}</span><b>{{item.from.name?item.from.name:'无名小虾'}}</b><small>(Uid:{{item.from.account}})</small></div>
 									<p>{{item.txt}}</p>
 								</div>
 							</div>

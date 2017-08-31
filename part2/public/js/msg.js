@@ -94,7 +94,11 @@ var msg=Vue.extend({
 		date: function (value) {
 			var _date=new Date(value);
 			return (_date.getMonth()+1)+'月'+_date.getDate()+'日'
-		}
+		},
+		time: function (value) {
+			var _date=new Date(value);
+			return (_date.getMonth()+1)+'月'+_date.getDate()+'日 '+_date.getHours()+'时'+_date.getMinutes()+'分'
+		},
 	}
 });
 
