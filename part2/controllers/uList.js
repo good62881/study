@@ -8,9 +8,9 @@ exports.uList=function(req,res){
 	var cb={code:0,data:{data:"",count:""},msg:""};
 	if(req.session.user && req.session.auT==100){
 		var match= {};
-		if (req.body.date){match.$and=[{date:{$gte:new Date(req.body.date[0])}},{date:{$lte:new Date(req.body.date[1])}}]}; //注意将字符串转为Date对象，在进行查询
-		if (req.body.status!==''){match.auT=req.body.status};
-		if (req.body.type && req.body.val) {match[req.body.type]=req.body.val;};
+		if (req.body.date){match.$and=[{date:{$gte:new Date(req.body.date[0])}},{date:{$lte:new Date(req.body.date[1])}}]}; //注意将字符串转为Date对象，再进行查询
+		if (req.body.status!=''){match.auT=req.body.status};
+		if (req.body.type && req.body.val) {match[req.body.type]={ $regex: req.body.val, $options: "i" };};
 		Users.aggregate([
 				{$match:match},
 				{$match:{auT:{$ne:100}}},
